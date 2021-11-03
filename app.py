@@ -72,7 +72,7 @@ multiple_product_schema = ProductSchema(many=True)
 
 @app.route("/user/add", methods=["POST"])
 def add_user():
-    if request.centent_type != "application/json":
+    if request.content_type != "application/json":
         return jsonify("Error, Data must be sent as JSON")
     post_data = request.get_json()
     username = post_data.get("username")
@@ -85,7 +85,7 @@ def add_user():
     db.session.commit()
     return jsonify(user_schema.dump(new_record))
 
-@app.route("/user/get", methods=["GET"])
+@app.route("/users", methods=["GET"])
 def get_all_users():
     all_users = User.query.all()
     return jsonify(user_schema.dump(all_users))
