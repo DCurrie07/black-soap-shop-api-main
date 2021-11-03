@@ -141,6 +141,10 @@ def admin_verification():
     
     return jsonify("Admin Verified")
 
+@app.route("/admin/get", methods=["GET"])
+def get_all_admin():
+    all_admins = Admin.query.all()
+    return jsonify(multiple_admin_schema.dump(all_admins))
 
 if __name__ == "__main__":
     app.run(debug=True)
