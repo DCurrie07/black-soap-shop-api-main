@@ -88,7 +88,7 @@ def add_user():
 @app.route("/user/get", methods=["GET"])
 def get_all_users():
     all_users = User.query.all()
-    return jsonify(user_schema.dump(all_users))
+    return jsonify(multiple_user_schema.dump(all_users))
 
 @app.route("/user/verfication", methods=["POST"])
 def verification():
