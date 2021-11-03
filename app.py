@@ -4,14 +4,16 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://bb2ef251680853:f96c55a9@us-cdbr-east-04.cleardb.com/heroku_b1238e369440257'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bf9f59b5d08020:6a1aeaa9@us-cdbr-east-04.cleardb.com/heroku_ce69f39c3281383'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 CORS(app)
 
 
 class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
     first_name = db.Column(db.String(45), nullable=False)
@@ -24,6 +26,7 @@ class User(db.Model):
         self.last_name = last_name
 
 class Admin(db.Model):
+    __tablename__ = 'admin'
     admin_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
@@ -37,10 +40,11 @@ class Admin(db.Model):
         self.last_name = last_name
 
 class Product(db.Model):
+    __tablename__ = 'product'
     product_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(150), nullable=False)
-    price = db.Column(db.Decimal(10,2), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
 
     def __init__(self, name, description, price):
         self.name = name
@@ -81,6 +85,8 @@ def add_user():
     db.session.commit()
     return jsonify(user_schema.dump(new_record))
 
+if __name__ == "__main__":
+    app.run(debug=True)
     
 
     

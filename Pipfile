@@ -15,6 +15,8 @@ flask-mysql = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 psycopg2 = "*"
+mysqlclient = "*"
+flask-mysqldb = "*"
 
 [dev-packages]
 
