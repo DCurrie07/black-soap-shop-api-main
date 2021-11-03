@@ -85,10 +85,62 @@ def add_user():
     db.session.commit()
     return jsonify(user_schema.dump(new_record))
 
-@app.route("/users", methods=["GET"])
+@app.route("/user/get", methods=["GET"])
 def get_all_users():
     all_users = User.query.all()
     return jsonify(user_schema.dump(all_users))
+
+@app.route("/user/verfication", methods=["POST"])
+def verification():
+    if request.content_type != "application/json":
+        return jsonify("Error, Data must be sent as JSON")
+    post_data = request.get_json()
+    username = post_data.get("username")
+    password = post_data.get("password")
+
+    user = db.session.query(User).filter(User.username == username).first()
+
+    if user is None:
+        return jsonify("User NOT Verified")
+
+    if user.password != password:
+        return jsonify("User NOT Verified")
+    
+    return jsonify("User Verified")
+
+@app.route("/admin/add", methods=["POST"])
+def add_admin():
+    if request.content_type != "application/json":
+        return jsonify("Error, Data must be sent as JSON")
+    post_data = request.get_json()
+    username = post_data.get("username")
+    password = post_data.get("password")
+    first_name = post_data.get("first_name")
+    last_name = post_data.get("last_name")
+
+    new_record = Admin(username, password, first_name, last_name)
+    db.session.add(new_record)
+    db.session.commit()
+    return jsonify(admin_schema.dump(new_record))
+
+@app.route("/admin/verfication", methods=["POST"])
+def admin_verification():
+    if request.content_type != "application/json":
+        return jsonify("Error, Data must be sent as JSON")
+    post_data = request.get_json()
+    username = post_data.get("username")
+    password = post_data.get("password")
+
+    admin = db.session.query(Admin).filter(Admin.username == username).first()
+
+    if admin is None:
+        return jsonify("Admin NOT Verified")
+
+    if admin.password != password:
+        return jsonify("Admin NOT Verified")
+    
+    return jsonify("Admin Verified")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
