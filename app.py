@@ -4,7 +4,7 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bf9f59b5d08020:6a1aeaa9@us-cdbr-east-04.cleardb.com/heroku_ce69f39c3281383'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://fnuuxwzjwsaonp:0a1a91a42db7d1106195fddac81afd7e24f04adc7fccb0ec7d678a36f1eaf8f8@ec2-54-147-207-184.compute-1.amazonaws.com:5432/d8mv8hm3m19p3k'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -84,6 +84,11 @@ def add_user():
     db.session.add(new_record)
     db.session.commit()
     return jsonify(user_schema.dump(new_record))
+
+@app.route("/user/get", methods=["GET"])
+def get_all_users():
+    all_users = User.query.all()
+    return jsonify(user_schema.dump(all_users))
 
 if __name__ == "__main__":
     app.run(debug=True)
